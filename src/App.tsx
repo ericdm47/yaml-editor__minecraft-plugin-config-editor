@@ -510,7 +510,7 @@ export default function App() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-pixel text-4xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-[#ffd38d] via-[#c28a3d] to-[#b57e3e] uppercase select-none drop-shadow">
-                  CREATE
+                  ARMOURY FIXER
                 </span>
                 <span className="bg-[#ffb347] text-[#171310] text-[10px] font-pixel px-1.5 py-0.2 rounded border border-[#ffd38d] font-black uppercase tracking-wider animate-pulse">
                   YAML v1.2
