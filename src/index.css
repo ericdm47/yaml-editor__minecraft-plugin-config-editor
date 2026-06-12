@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Share+Tech+Mono&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-pixel: "VT323", monospace;
+  --font-mono: "Share Tech Mono", monospace;
+  --font-sans: "Noto Sans KR", sans-serif;
+}
+
+@layer utilities {
+  /* Micro custom scrollbars for realistic retro game gui interface */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #18130f;
+    border: 1px solid #3a2f26;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #5f3818;
+    border: 1px solid #c28a3d;
+    border-radius: 2px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #c28a3d;
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin-reverse-slow {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes piston-pump {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(12px);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 15s linear infinite;
+}
+
+.animate-spin-rev-slow {
+  animation: spin-reverse-slow 20s linear infinite;
+}
+
+.animate-piston {
+  animation: piston-pump 3s ease-in-out infinite;
+}
+

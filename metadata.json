@@ -1,0 +1,6 @@
+{
+  "name": "Create YAML Editor",
+  "description": "Minecraft Create mod-inspired styled premium industrial YAML configuration editor designed for Quality Armoury and general configs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
