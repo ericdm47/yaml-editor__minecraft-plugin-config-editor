@@ -188,10 +188,7 @@ textarea{
 </head>
 <body>
 
-<div id="app">
-
-  <div id="sidebar">
-	  
+<br><br>
   <div class="panel">
     <h3>⚙ 프리셋</h3>
 	  <input
@@ -278,6 +275,8 @@ const presets = {
 let data = {}
 let fileName = "edited.yml"
 
+let searchText = ""
+	
 let lastData = null // 이전 상태 저장
 
 function mergePreset(target, source) {
@@ -338,17 +337,16 @@ const descriptions = {
   delayForShoot: "단발 사격 시 사격 후 다음 사격까지의 시간입니다"
 }
 
-document.getElementById("fileInput").addEventListener("change", function(e){
-  const file = e.target.files[0]
-  fileName = file.name  // ⭐ 파일명 저장
+document
+  .getElementById("fileInput")
+  .addEventListener("change", function(e){
 
-  const reader = new FileReader()
+    const file = e.target.files[0]
 
-  document.getElementById("fileInput").addEventListener("change", function(e){
-	const file = e.target.files[0]
-	if (!file) return
+    if (!file) return
 
-	loadFile(file)
+    loadFile(file)
+
 })
 
   reader.readAsText(file)
@@ -371,6 +369,12 @@ function applyPreset(name){
 
 function createUI(obj, container, path = []) {
   for (let key in obj) {
+	  if (
+  searchText &&
+  !key.toLowerCase().includes(searchText.toLowerCase())
+) {
+  continue
+}
     const value = obj[key]
     const currentPath = [...path, key]
 
@@ -496,7 +500,19 @@ dropZone.addEventListener("drop", (e) => {
 
   loadFile(file)
 })
+document
+  .getElementById("searchBox")
+  .addEventListener("input", function(){
 
+    searchText = this.value
+
+    const editor =
+      document.getElementById("editor")
+
+    editor.innerHTML = ""
+
+    createUI(data, editor)
+})
 
 
 </script>
