@@ -5,7 +5,54 @@
   <title>Gun Editor Advanced</title>
   <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
   <style>
-    body { font-family: Arial; padding: 20px; }
+    body{
+  margin:0;
+  background:#1b1815;
+  color:#f4e3bc;
+  font-family:Arial,sans-serif;
+}
+
+#app{
+  display:flex;
+  min-height:100vh;
+}
+
+#sidebar{
+  width:250px;
+  background:#2a221d;
+  border-right:4px solid #8d6033;
+  padding:20px;
+  box-sizing:border-box;
+}
+
+#mainContent{
+  flex:1;
+  padding:20px;
+}
+
+#dropZone{
+  margin-top:20px;
+  padding:30px;
+  border:2px dashed #b8863b;
+  text-align:center;
+}
+
+button{
+  width:100%;
+  padding:10px;
+
+  background:#b8863b;
+  border:none;
+
+  cursor:pointer;
+}
+
+select,
+input,
+textarea{
+  width:100%;
+  box-sizing:border-box;
+}
     .group { margin-left: 20px; border-left: 2px solid #ccc; padding-left: 10px; }
     .item { margin: 5px 0; }
     label { display: inline-block; width: 180px; }
@@ -13,30 +60,49 @@
 </head>
 <body>
 
-<select onchange="applyPreset(this.value)">
-  <option value="">프리셋 선택</option>
-  <option value="SMG">SMG</option>
-  <option value="SR">SR</option>
-  <option value="AR">AR</option>
-  <option value="HG">HG</option>
-  <option value="SG">SG</option>
-  <option value="DMR">DMR</option>
-</select>
+<div id="app">
 
-<h2>YAML 데이터 편집기 (Quality Armoury 플러그인의 총기 수정 용도로 만들어졌습니다)</h2>
+  <div id="sidebar">
 
-<input type="file" id="fileInput">
-<div id="dropZone" style="
-  margin-top:20px;
-  padding:30px;
-  border:2px dashed #aaa;
-  text-align:center;
-  color:#666;
-">
-  여기로 YAML 파일을 드래그하세요
+    <h3>⚙ 프리셋</h3>
+
+    <select onchange="applyPreset(this.value)">
+      <option value="">프리셋 선택</option>
+      <option value="SMG">SMG</option>
+      <option value="SR">SR</option>
+      <option value="AR">AR</option>
+      <option value="HG">HG</option>
+      <option value="SG">SG</option>
+      <option value="DMR">DMR</option>
+    </select>
+
+    <h3>📁 파일</h3>
+
+    <input type="file" id="fileInput">
+
+    <br><br>
+
+    <button onclick="saveFile()">
+      저장
+    </button>
+
+  </div>
+
+  <div id="mainContent">
+
+    <h2>
+      YAML 데이터 편집기
+    </h2>
+
+    <div id="dropZone">
+      여기로 YAML 파일을 드래그하세요
+    </div>
+
+    <div id="editor"></div>
+
+  </div>
+
 </div>
-<div id="editor"></div>
-<button onclick="saveFile()">저장</button>
 
 <script>
 
