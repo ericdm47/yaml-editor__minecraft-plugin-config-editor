@@ -60,6 +60,33 @@
   border:2px dashed #b8863b;
   text-align:center;
 }
+#topBar{
+
+  background:
+    linear-gradient(
+      180deg,
+      var(--brass),
+      var(--copper)
+    );
+
+  color:white;
+
+  font-size:24px;
+
+  font-weight:bold;
+
+  padding:16px;
+
+  border:2px solid #5f3818;
+
+  border-radius:6px;
+
+  margin-bottom:20px;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.3),
+    0 4px 8px rgba(0,0,0,0.4);
+}
 
 button{
   width:100%;
@@ -115,9 +142,9 @@ textarea{
   </div>
   <div id="mainContent">
 
-    <h2>
-      YAML 데이터 편집기
-    </h2>
+    <div id="topBar">
+  ⚙ Quality Armoury Config Editor
+    </div>
 
     <div id="dropZone">
       여기로 YAML 파일을 드래그하세요
