@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Gun Editor Advanced</title>
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .group { margin-left: 20px; border-left: 2px solid #ccc; padding-left: 10px; }
+    .item { margin: 5px 0; }
+    label { display: inline-block; width: 180px; }
+  </style>
+</head>
+<body>
+
+<select onchange="applyPreset(this.value)">
+  <option value="">프리셋 선택</option>
+  <option value="SMG">SMG</option>
+  <option value="SR">SR</option>
+  <option value="AR">AR</option>
+  <option value="HG">HG</option>
+  <option value="SG">SG</option>
+  <option value="DMR">DMR</option>
+</select>
+
+<h2>YAML 데이터 편집기 (Quality Armoury 플러그인의 총기 수정 용도로 만들어졌습니다)</h2>
+
+<input type="file" id="fileInput">
+<div id="dropZone" style="
+  margin-top:20px;
+  padding:30px;
+  border:2px dashed #aaa;
+  text-align:center;
+  color:#666;
+">
+  여기로 YAML 파일을 드래그하세요
+</div>
+<div id="editor"></div>
+<button onclick="saveFile()">저장</button>
+
+<script>
+
+
+const presets = {
+  SMG: {
+    recoil: 0.3,
+    firerate: 3,
+    damage: 2
+  },
+  SR: {
+    recoil: 5,
+    firerate: 1,
+    damage: 15
+  },
+  AR: {
+    recoil: 0.7,
+    firerate: 3,
+    damage: 4
+  },
+  HG: {
+    recoil: 0.1,
+    firerate: 2,
+    damage: 3
+  },
+  SG: {
+    recoil: 1.5,
+    firerate: 1,
+    damage: 3
+  },
+  DMR: {
+    recoil: 0.8,
+    firerate: 2,
+    damage: 5
+  }
+}
+
+
+let data = {}
+let fileName = "edited.yml"
+
+let lastData = null // 이전 상태 저장
+
+function mergePreset(target, source) {
+  for (let key in source) {
+    if (
+      typeof source[key] === "object" &&
+      source[key] !== null &&
+      !Array.isArray(source[key])
+    ) {
+      if (!target[key]) target[key] = {}
+      mergePreset(target[key], source[key])
+    } else {
+      target[key] = source[key]
+    }
+  }
+}
+
+function isChanged(path, value){
+  if (!lastData) return false
+
+  let ref = lastData
+
+  for (let i = 0; i < path.length; i++) {
+    if (ref == null) return true
+    ref = ref[path[i]]
+  }
+
+  return ref !== value
+}
+
+function loadFile(file){
+  fileName = file.name
+
+  const reader = new FileReader()
+
+  reader.onload = function(e){
+    data = jsyaml.load(e.target.result)
+
+    const editor = document.getElementById("editor")
+    editor.innerHTML = ""
+    createUI(data, editor)
+  }
+
+  reader.readAsText(file)
+}
+
+
+
+
+
+const descriptions = {
+  damage: "총기의 기본 데미지",
+  firerate: "연사 속도 (숫자가 커질수록 빨라집니다) AR:3 기본값",
+  recoil: "반동(숫자가 커질수록 세집니다) AR:0.7 기본값",
+  maxbullets: "탄창 크기",
+  maxBulletDistance: "사거리",
+  setZoomLevel: "줌 배율 (숫자가 커질수록 커집니다) AR:3 기본값",
+  delayForShoot: "단발 사격 시 사격 후 다음 사격까지의 시간입니다"
+}
+
+document.getElementById("fileInput").addEventListener("change", function(e){
+  const file = e.target.files[0]
+  fileName = file.name  // ⭐ 파일명 저장
+
+  const reader = new FileReader()
+
+  document.getElementById("fileInput").addEventListener("change", function(e){
+	const file = e.target.files[0]
+	if (!file) return
+
+	loadFile(file)
+})
+
+  reader.readAsText(file)
+})
+
+function applyPreset(name){
+  if (!presets[name]) return
+
+  // 이전 상태 저장
+  lastData = JSON.parse(JSON.stringify(data))
+
+  // 프리셋 적용 (중첩 지원)
+  mergePreset(data, presets[name])
+
+  // UI 다시 그리기
+  const editor = document.getElementById("editor")
+  editor.innerHTML = ""
+  createUI(data, editor)
+}
+
+function createUI(obj, container, path = []) {
+  for (let key in obj) {
+    const value = obj[key]
+    const currentPath = [...path, key]
+
+    const div = document.createElement("div")
+    div.className = "item"
+		if (isChanged(currentPath, value)) {
+		div.style.backgroundColor = "#ffe6e6"
+}
+
+    // 객체 (중첩)
+    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+      const title = document.createElement("h4")
+      title.innerText = key
+
+      const group = document.createElement("div")
+      group.className = "group"
+
+      createUI(value, group, currentPath)
+
+      div.appendChild(title)
+      div.appendChild(group)
+    } 
+    // 배열
+    else if (Array.isArray(value)) {
+      const label = document.createElement("label")
+      label.innerText = key + " (list):"
+
+      const textarea = document.createElement("textarea")
+      textarea.rows = 3
+      textarea.value = value.join(", ")
+
+      textarea.oninput = () => {
+        setValue(currentPath, textarea.value.split(",").map(v => v.trim()))
+      }
+
+      div.appendChild(label)
+      div.appendChild(textarea)
+    } 
+    // 기본 값
+    else {
+      const label = document.createElement("label")
+      label.innerText = key + ":"
+	  // ⭐ 설명 추가
+		if (descriptions[key]) {
+			const info = document.createElement("span")
+			info.innerText = " ⓘ"
+			info.style.color = "blue"
+			info.style.cursor = "pointer"
+			info.title = descriptions[key] // ← 마우스 올리면 설명
+
+			label.appendChild(info)
+		}
+      let input
+
+      if (typeof value === "number") {
+        input = document.createElement("input")
+        input.type = "number"
+        input.value = value
+
+        input.oninput = () => setValue(currentPath, Number(input.value))
+
+      } else if (typeof value === "boolean") {
+        input = document.createElement("input")
+        input.type = "checkbox"
+        input.checked = value
+
+        input.onchange = () => setValue(currentPath, input.checked)
+
+      } else {
+        input = document.createElement("input")
+        input.type = "text"
+        input.value = value
+
+        input.oninput = () => setValue(currentPath, input.value)
+      }
+
+      div.appendChild(label)
+      div.appendChild(input)
+    }
+
+    container.appendChild(div)
+  }
+}
+
+// 값 업데이트 함수 (핵심)
+function setValue(path, newValue) {
+  let ref = data
+  for (let i = 0; i < path.length - 1; i++) {
+    ref = ref[path[i]]
+  }
+  ref[path[path.length - 1]] = newValue
+}
+
+// 저장
+function saveFile(){
+  const yaml = jsyaml.dump(data, { sortKeys: false })
+
+  const blob = new Blob([yaml], {type: "text/yaml"})
+  const url = URL.createObjectURL(blob)
+
+  const a = document.createElement("a")
+  a.href = url
+  a.download = fileName  // ⭐ 기존 파일명 유지
+  a.click()
+}
+const dropZone = document.getElementById("dropZone")
+
+dropZone.addEventListener("dragover", (e) => {
+  e.preventDefault()
+  dropZone.style.backgroundColor = "#eef"
+})
+
+dropZone.addEventListener("dragleave", () => {
+  dropZone.style.backgroundColor = ""
+})
+
+dropZone.addEventListener("drop", (e) => {
+  e.preventDefault()
+  dropZone.style.backgroundColor = ""
+
+  const file = e.dataTransfer.files[0]
+  if (!file) return
+
+  loadFile(file)
+})
+
+
+
+</script>
+
+</body>
+</html>
