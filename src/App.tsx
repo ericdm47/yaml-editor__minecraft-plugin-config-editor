@@ -28,6 +28,7 @@ import {
 import { EditorTheme, HistoryState } from "./types";
 import { DEFAULT_YAML, PRESETS, DESCRIPTIONS } from "./constants";
 import PipeAnimation from "./components/PipeAnimation";
+import KakaoAd from "./components/KakaoAd";
 
 export default function App() {
   // Theme & App State
@@ -718,6 +719,15 @@ export default function App() {
                 <PipeAnimation />
               </div>
 
+              {/* Kakao AdFit Side-Wing 160x600 Gauge Banner (PC 전용) */}
+              <div className="hidden lg:block pt-2">
+                <KakaoAd 
+                  unitId="DAN-Tp2j09zyARF7KdtQ" 
+                  width="160" 
+                  height="600" 
+                />
+              </div>
+
             </aside>
 
             {/* MAIN CONFIGURATION EDITOR */}
@@ -982,7 +992,7 @@ export default function App() {
                     법률 및 운영 정책 (Legal Policy)
                   </h3>
                   <span className="text-[10px] bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-2 py-0.5 rounded uppercase font-mono tracking-widest font-bold">
-                    치킨에 관한 내용
+                    AdSense Ready
                   </span>
                 </div>
 
@@ -1270,6 +1280,15 @@ export default function App() {
                       소스 방문 🔗
                     </a>
                   </div>
+                </div>
+
+                {/* Sponsor Gauge: Kakao AdFit Section */}
+                <div className="mt-5 pt-4.5 border-t border-[#523d2b]/50">
+                  <KakaoAd 
+                    unitId="DAN-Tp2j09zyARF7KdtQ" 
+                    width="160" 
+                    height="600" 
+                  />
                 </div>
 
                 {/* Steampunk stamp detail */}
