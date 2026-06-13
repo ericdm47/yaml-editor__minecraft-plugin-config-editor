@@ -982,7 +982,7 @@ export default function App() {
                     법률 및 운영 정책 (Legal Policy)
                   </h3>
                   <span className="text-[10px] bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-2 py-0.5 rounded uppercase font-mono tracking-widest font-bold">
-                    AdSense Ready
+                    치킨에 관한 내용
                   </span>
                 </div>
 
