@@ -599,7 +599,7 @@ export default function App() {
             }`}
           >
             <Settings className={`w-5 h-5 ${activeTab === "editor" ? "animate-spin-slow text-[#171310]" : "text-[#b89f75]"}`} />
-            ⚙ 에디터 조종실 (CONFIG FORGE)
+            ⚙ 에디터 워크스페이스 (CONFIG FORGE)
           </button>
 
           <button
