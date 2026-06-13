@@ -22,7 +22,8 @@ import {
   AlertTriangle,
   Flame,
   Wrench,
-  Check
+  Check,
+  ShieldCheck
 } from "lucide-react";
 import { EditorTheme, HistoryState } from "./types";
 import { DEFAULT_YAML, PRESETS, DESCRIPTIONS } from "./constants";
@@ -599,7 +600,7 @@ export default function App() {
             }`}
           >
             <Settings className={`w-5 h-5 ${activeTab === "editor" ? "animate-spin-slow text-[#171310]" : "text-[#b89f75]"}`} />
-            ⚙ 에디터 워크스페이스 (CONFIG FORGE)
+            ⚙ 에디터 조종실 (CONFIG FORGE)
           </button>
 
           <button
@@ -971,6 +972,83 @@ export default function App() {
                     </div>
                   </li>
                 </ul>
+              </div>
+
+              {/* AdSense Compliance: Privacy Policy & Terms of Service */}
+              <div className="panel border-3 border-[#8d6033] bg-[#2a221d] p-6 rounded-xl shadow-lg space-y-4">
+                <div className="border-b border-[#523d2b] pb-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                  <h3 className="font-pixel text-xl text-[#ffd38d] uppercase tracking-wider flex items-center gap-2">
+                    <ShieldCheck className="w-5 h-5 text-orange-400" />
+                    법률 및 운영 정책 (Legal Policy)
+                  </h3>
+                  <span className="text-[10px] bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-2 py-0.5 rounded uppercase font-mono tracking-widest font-bold">
+                    AdSense Ready
+                  </span>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Collapsible Privacy Policy */}
+                  <div className="bg-[#18130f] border border-[#523d2b] rounded-lg overflow-hidden">
+                    <details className="group">
+                      <summary className="flex items-center justify-between p-4 cursor-pointer select-none text-[#ffd38d] hover:text-[#ffb347] font-pixel text-base">
+                        <span className="flex items-center gap-2">
+                          🔒 개인정보처리방침 (Privacy Policy)
+                        </span>
+                        <span className="text-xs text-[#b89f75] group-open:rotate-180 transition-transform">▼</span>
+                      </summary>
+                      <div className="p-4 pt-0 border-t border-[#3a2f26] text-xs text-[#b89f75] space-y-3 font-sans leading-relaxed max-h-[300px] overflow-y-auto custom-scrollbar">
+                        <p className="font-bold text-[#ffd38d]">최종 수정일: 2026년 6월 12일</p>
+                        <p>
+                          본 사이트는 이용자의 개인정보 수집을 최소화하며 안전하게 처리하기 위해 관계 법령을 준수하여 다음과 같은 방침을 구성하여 일괄 운영합니다.
+                        </p>
+                        <hr className="border-[#3a2f26]" />
+                        <h5 className="font-bold text-white">1. 수집하는 개인정보 항목 및 가공 방식</h5>
+                        <p>
+                          - 본 도구는 기본적으로 <strong>서버 전송이 차단된 완전 정적 클라이언트 에디터(Client-side SPA)</strong>입니다. 귀하가 업로드하는 마인크래프트 YAML 설정 정보는 귀하의 로컬 웹 브라우저 캐시 메모리에서만 파싱 가공되며, 어떠한 외부 원격 서버로도 전송 혹은 무단 보관되지 않으므로 안심하고 정밀 개조 정비를 진행하셔도 좋습니다.<br />
+                          - 사이트의 유지 보수와 안정적인 연동 정보 확인을 위해 구글 애드센스(Google AdSense) 등 서드파티 스크립트를 통한 쿠키 수집이 수행될 수 있습니다.
+                        </p>
+                        <h5 className="font-bold text-white">2. 제3자 광고 게재 및 쿠키 수집 안내 (구글 애드센스 요구안 준수)</h5>
+                        <p>
+                          - 본 웹사이트는 구글(Google, Inc.)을 비롯한 제3자 광고 제휴 업체의 광고 송출 프로세서를 활용하여 가동 비용을 충당합니다.<br />
+                          - 구글은 사용자가 본 사이트 또는 타 웹서비스를 방문한 기록을 바탕으로 보다 정밀하고 유용한 맞춤형 광고를 표출하기 위해 <strong>Doubleclick 쿠키 및 광고 파트너 식별자</strong>를 자체 활용합니다.<br />
+                          - 사용자는 언제든지 구글 광고 공식 관리국(<a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" className="text-[#ffb347] underline hover:text-[#ffd38d]">https://adssettings.google.com</a>)을 통해 개인 맞춤형 연동 추적을 거부하고 설정을 차단할 수 있습니다.
+                        </p>
+                        <h5 className="font-bold text-white">3. 개인정보 보호 담당 주소</h5>
+                        <p>
+                          - 정보 처리 및 개정과 관련된 버그성 애로사항이나 기타 보안 문의선은 공식 무전 채널인 <strong>ericdm47@gmail.com</strong>으로 언제든 편히 무전해 주십시오.
+                        </p>
+                      </div>
+                    </details>
+                  </div>
+
+                  {/* Collapsible Terms of Service */}
+                  <div className="bg-[#18130f] border border-[#523d2b] rounded-lg overflow-hidden">
+                    <details className="group">
+                      <summary className="flex items-center justify-between p-4 cursor-pointer select-none text-[#ffd38d] hover:text-[#ffb347] font-pixel text-base">
+                        <span className="flex items-center gap-2">
+                          ⚖️ 서비스 이용약관 (Terms of Service)
+                        </span>
+                        <span className="text-xs text-[#b89f75] group-open:rotate-180 transition-transform">▼</span>
+                      </summary>
+                      <div className="p-4 pt-0 border-t border-[#3a2f26] text-xs text-[#b89f75] space-y-3 font-sans leading-relaxed max-h-[300px] overflow-y-auto custom-scrollbar">
+                        <p className="font-bold text-[#ffd38d]">시행일: 2026년 6월 12일</p>
+                        <h5 className="font-bold text-white">제1조 (목적)</h5>
+                        <p>
+                          본 규약은 이용자가 'Armoury Fixer 커스텀 YAML 에디터'가 무상 기부하는 클라이언트 사이드 변환 엔진과 프리셋 저장 인프라를 지혜롭게 다룸에 있어 상호 신뢰와 원활한 작동성을 지속 지키기 위한 수칙의 확보를 목적으로 삼습니다.
+                        </p>
+                        <h5 className="font-bold text-white">제2조 (책임의 한계 및 백업 면책)</h5>
+                        <p>
+                          - 본 수작업 조절기는 마인크래프트의 대표적인 장비 구성 사양을 간편 조율하도록 특별 고안된 독립 무료 도구이며, 변환 제작된 최종 산출물 적용 시 발생할 수 있는 마인크래프트 버그, 인게임 서버 튕김, 충돌(Crash) 등의 책임선은 일체 귀하에게 귀속됩니다.<br />
+                          - 소중하게 가공한 <strong>무기 설정 yaml 코드의 실제 적용 이전에는 안전하게 로컬 이중 사본(.bak)을 구성하는 백업 원칙</strong>을 준수할 것을 무상 라이선스 기준 하에 각별히 협조 부탁드립니다.
+                        </p>
+                        <h5 className="font-bold text-white">제3조 (지적 재산 및 오남용 규제)</h5>
+                        <p>
+                          본 무료 소스 코드의 고의적인 악성 변조 및 스크래핑 행위, 웹사이트 트래픽 고부하 인젝트, 또는 광고 차단기 강요 등으로 인한 운영 간섭은 본 라이선스 제공 거부 및 트래픽 제한 사유가 될 수 있습니다.
+                        </p>
+                      </div>
+                    </details>
+                  </div>
+                </div>
               </div>
 
             </section>
