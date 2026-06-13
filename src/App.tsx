@@ -40,6 +40,7 @@ export default function App() {
   
   // Inquiry Form State
   const [inquirySent, setInquirySent] = useState<boolean>(false);
+  const [copiedInquiry, setCopiedInquiry] = useState<boolean>(false);
   const [inquiryForm, setInquiryForm] = useState({ name: "", email: "ericdm47@gmail.com", type: "bug", content: "" });
   
   // Collapse State (Store paths as dot-separated string or nested key)
@@ -536,11 +537,11 @@ export default function App() {
                 className="bg-[#2a221d] text-[#f0dfb4] border border-[#8d6033] px-2.5 py-1.5 rounded-md font-mono text-xs focus:outline-none focus:ring-1 focus:ring-[#ffb347] cursor-pointer"
               >
                 <option value="">프리셋 선택</option>
-                <option value="SMG">SMG (소기관총)</option>
-                <option value="SR">SR (저격식)</option>
-                <option value="AR">AR (돌격식)</option>
+                <option value="SMG">SMG (경기관총)</option>
+                <option value="SR">SR (저격소총)</option>
+                <option value="AR">AR (돌격소총)</option>
                 <option value="HG">HG (권총)</option>
-                <option value="SG">SG (배합탄)</option>
+                <option value="SG">SG (산탄총)</option>
                 <option value="DMR">DMR (지정사수)</option>
               </select>
             </div>
@@ -610,7 +611,7 @@ export default function App() {
             }`}
           >
             <HelpCircle className="w-5 h-5 text-current" />
-            📜 도감 & 고객 정비실 (ABOUT & SUPPORT)
+            📜 설명서 & 고객 정비실 (ABOUT & SUPPORT)
           </button>
         </div>
 
@@ -639,7 +640,7 @@ export default function App() {
                     <Upload className="w-7 h-7 mx-auto text-[#b89f75] group-hover:text-[#ffb347] group-hover:scale-110 transition-transform mb-2" />
                     <span className="text-xs font-mono font-bold text-[#f0dfb4] block">파일 선택</span>
                     <span className="text-[10px] text-[#b89f75] block mt-1 hover:underline">
-                      또는 드래그앤드롭
+                      또는 정비 스테이션에 DND 해도 인식합니다
                     </span>
                     <input
                       type="file"
@@ -833,7 +834,7 @@ export default function App() {
                       </span>
                     </div>
                     <p className="text-sm max-w-md font-sans mb-4 text-[#b89f75]">
-                      적용 중인 설정 구조체가 없거나 삭제되었습니다. 아래 버튼을 눌러 기본 마인크래프트 수 정 시안용 예제 파일을 채우십시오.
+                      적용 중인 설정 구조체가 없거나 삭제되었습니다. 아래 버튼을 눌러 기본 마인크래프트 수정 시안용 예제 파일을 채우십시오.
                     </p>
                     <button 
                       type="button"
@@ -910,7 +911,7 @@ export default function App() {
                 
                 <div className="space-y-4 font-sans text-sm text-[#b89f75] leading-relaxed">
                   <p>
-                    이곳은 <strong className="text-[#ffd38d]">마인크래프트 서버 개발자 및 운영자</strong>분들이 복잡하고 까다로운 총기/장비 모드(예: <strong className="text-[#f0dfb4]">Quality Armoury</strong> 플러그인 에셋)의 YAML 환경 설정을 직관적이고 다채로운 비주얼 기어 속에서 안전하게 수정하도록 고안된 <strong className="text-[#ffd38d]">산업용 커스텀 포지 에디터</strong>입니다.
+                    이곳은 <strong className="text-[#ffd38d]">마인크래프트 서버 개발자 및 운영자</strong>분들이 복잡하고 까다로운 총기/장비 모드(예: <strong className="text-[#f0dfb4]">Quality Armoury</strong> 플러그인 에셋)의 YAML 환경 설정을 직관적이고 다채로운 비주얼 기어 속에서 안전하게 수정하도록 고안된 <strong className="text-[#ffd38d]">커스텀 yaml 에디터</strong>입니다.
                   </p>
                   <p>
                     인게임 밸런싱(데미지, 반동 오차, 연사 딜레이, 탄창 용량 등)을 변경할 때 문장 부호 하나라도 실수하면 플러그인이 완전히 깨지게 설계되어 있는 단스크립트 YAML 특성을 보완하여, <strong className="text-white">마우스 클릭과 고장 없는 인풋 조절판</strong>을 통해 100% 무결성 사양의 <code className="bg-black/40 px-1 py-0.5 rounded text-amber-300 text-xs font-mono">weapon.yml</code> 사양을 조립할 수 있습니다.
@@ -985,32 +986,90 @@ export default function App() {
                 </h3>
 
                 {inquirySent ? (
-                  <div className="bg-[#18130f] p-5 rounded-lg border-2 border-green-500/30 text-center space-y-4">
-                    <div className="w-12 h-12 bg-green-500/10 border border-green-400/40 text-green-400 rounded-full flex items-center justify-center mx-auto text-xl font-bold animate-bounce">
-                      ✓
+                  <div className="bg-[#18130f] p-4.5 rounded-lg border-2 border-orange-500/30 text-left space-y-4">
+                    <div className="flex items-center gap-2 border-b border-[#523d2b] pb-2.5">
+                      <div className="w-8 h-8 bg-orange-500/10 border border-orange-400/40 text-orange-400 rounded-full flex items-center justify-center text-sm font-bold animate-pulse">
+                        💡
+                      </div>
+                      <div>
+                        <span className="font-mono text-[10px] text-[#b89f75] uppercase tracking-widest block font-bold leading-none">
+                          STATIC FORGE NOTICE
+                        </span>
+                        <h4 className="font-pixel text-sm text-white mt-1">문의 전송 방법 안내</h4>
+                      </div>
                     </div>
-                    <div>
-                      <span className="font-mono text-xs text-green-400 uppercase tracking-widest block mb-1">
-                        FORGE SUCCESS TICKET
-                      </span>
-                      <h4 className="font-pixel text-lg text-white">문의 기어 발송 성공!</h4>
-                      <code className="text-[10px] bg-black/50 px-1.5 py-0.5 rounded text-amber-300 font-mono inline-block mt-1">
-                        #FORGE-{(Math.floor(Math.random() * 90000) + 10000)}
-                      </code>
-                    </div>
-                    <p className="text-xs text-[#b89f75] leading-relaxed">
-                      작성하신 정비 보고서 및 리포트 파일이 <strong>ericdm47@gmail.com</strong> 개발자 기어 함으로 성공적으로 주입되었습니다!
+
+                    <p className="text-xs text-[#b89f75] leading-relaxed font-sans">
+                      이 편집기는 브라우저 안에서 단독 실행되는 <strong>정적 포지 에뮬레이터(Client-side SPA)</strong>입니다. 
+                      백엔드 전송 서버를 거치지 않고, 고객님의 <strong>인게임 이메일 앱</strong>을 이용해 개발자 메일함으로 보다 안전하게 즉시 발송됩니다!
                     </p>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setInquirySent(false);
-                        setInquiryForm({ name: "", email: "ericdm47@gmail.com", type: "bug", content: "" });
-                      }}
-                      className="px-4 py-1.5 bg-[#4c3115] hover:bg-[#8d6033] text-xs font-mono font-bold rounded text-[#f0dfb4] transition-all cursor-pointer"
-                    >
-                      새로운 전송함 열기
-                    </button>
+
+                    {/* Pre-formatted Email Preview text area */}
+                    <div className="font-mono text-[11px] bg-[#0c0a08] border border-[#523d2b] p-3 rounded-md relative text-[#f4e3bc]">
+                      <div className="absolute top-1 text-[9px] font-bold text-amber-500 uppercase tracking-widest right-2 bg-[#201914] px-1 py-0.5 rounded border border-[#523d2b]">
+                        Email Template
+                      </div>
+                      <div className="space-y-1 select-all break-all whitespace-pre-wrap mt-2">
+                        <strong>To:</strong> ericdm47@gmail.com<br />
+                        <strong>Subject:</strong> [Minecraft Config Editor] {inquiryForm.name} 님의 의견 제보<br />
+                        <span className="text-[#b89f75]">----------------------------------------</span><br />
+                        [보내는 이름]: {inquiryForm.name}<br />
+                        [회신 이메일]: {inquiryForm.email}<br />
+                        [문의 종류]: {
+                          inquiryForm.type === "bug" ? "🐛 버그 및 기술 사양 제보" :
+                          inquiryForm.type === "feature" ? "⚙️ 신형 기어 프리셋 제 제안" :
+                          inquiryForm.type === "collab" ? "💼 커스텀 에디팅 제휴 및 주문" : "☕ 기타 격려 인사"
+                        }<br />
+                        [상세 내용]:<br />
+                        {inquiryForm.content}
+                      </div>
+                    </div>
+
+                    {/* Copy and open actions */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const typeText = 
+                            inquiryForm.type === "bug" ? "🐛 버그 및 기술 사양 제보" :
+                            inquiryForm.type === "feature" ? "⚙️ 신형 기어 프리셋 제 제안" :
+                            inquiryForm.type === "collab" ? "💼 커스텀 에디팅 제휴 및 주문" : "☕ 기타 격려 인사";
+                          
+                          const textToCopy = `[To]: ericdm47@gmail.com\n[Subject]: [Minecraft Config Editor] ${inquiryForm.name} 님의 의견 제보\n----------------------------------------\n* 보내는 분: ${inquiryForm.name}\n* 연락처 수신 메일: ${inquiryForm.email}\n* 분류: ${typeText}\n* 제보 본문:\n${inquiryForm.content}`;
+                          
+                          navigator.clipboard.writeText(textToCopy);
+                          setCopiedInquiry(true);
+                          setTimeout(() => setCopiedInquiry(false), 2000);
+                        }}
+                        className={`py-2 text-xs font-bold rounded flex items-center justify-center gap-1 transition-all cursor-pointer ${
+                          copiedInquiry 
+                            ? "bg-green-700 text-white" 
+                            : "bg-[#8d6033]/40 hover:bg-[#8d6033] text-[#f0dfb4] border border-[#ffb347]/30"
+                        }`}
+                      >
+                        {copiedInquiry ? "✓ 복사 완료!" : "📋 내용 복사하기"}
+                      </button>
+
+                      <a
+                        href={`mailto:ericdm47@gmail.com?subject=${encodeURIComponent(`[Minecraft Config Editor] ${inquiryForm.name} 님의 의견 제보`)}&body=${encodeURIComponent(`[보내는이]: ${inquiryForm.name}\n[회신용이메일]: ${inquiryForm.email}\n[문의 종류]: ${inquiryForm.type}\n\n[제보 상세 내용]:\n${inquiryForm.content}\n\n------------------------\n(본 양식을 복사하여 메일 작성기로 메일을 보내실 수도 있습니다.)`)}`}
+                        className="py-2 text-xs bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-black font-bold rounded flex items-center justify-center gap-1 transition-all cursor-pointer text-center"
+                      >
+                        ✉ 메일 쓰기 실행
+                      </a>
+                    </div>
+
+                    <div className="pt-2 text-center border-t border-[#523d2b]/40">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setInquirySent(false);
+                          setInquiryForm({ name: "", email: "ericdm47@gmail.com", type: "bug", content: "" });
+                        }}
+                        className="text-[11px] text-amber-500 hover:underline"
+                      >
+                        ← 뒤로 돌아가서 폼 다시 쓰기
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <form 
@@ -1020,6 +1079,16 @@ export default function App() {
                         alert("이름과 문의내용을 모두 성실하게 입력해 주십시오.");
                         return;
                       }
+                      
+                      // Trigger native mailto link
+                      const mailtoUri = `mailto:ericdm47@gmail.com?subject=${encodeURIComponent(`[Minecraft Config Editor] ${inquiryForm.name} 님의 의견 제보`)}&body=${encodeURIComponent(`[보내는이]: ${inquiryForm.name}\n[회신용이메일]: ${inquiryForm.email}\n[문의 종류]: ${inquiryForm.type}\n\n[제보 상세 내용]:\n${inquiryForm.content}`)}`;
+                      
+                      try {
+                        window.location.href = mailtoUri;
+                      } catch (err) {
+                        console.log("Mailto redirect error", err);
+                      }
+                      
                       setInquirySent(true);
                     }}
                     className="space-y-4 font-mono text-xs"
