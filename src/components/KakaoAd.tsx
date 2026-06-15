@@ -30,18 +30,18 @@ export default function KakaoAd({ unitId, width, height }: KakaoAdProps) {
   return (
     <div 
       ref={containerRef}
-      className="flex flex-col items-center justify-center p-3.5 bg-[#1a1410] border-3 border-[#8d6033] rounded-xl shadow-[inset_0_2px_8px_rgba(0,0,0,0.8),0_4px_12px_rgba(0,0,0,0.5)] relative overflow-hidden"
+      className="flex flex-col items-center justify-center p-3.5 bg-[#1a1410] border-3 border-[#8d6033] rounded-none relative"
     >
-      {/* Steampunk Visual Frame Detail */}
+      {/* Steampunk Visual Frame Detail - Square indicator tags to prevent any rounding flags */}
       <div className="absolute top-1 left-2 flex gap-1 h-1.5">
-        <span className="w-1.5 h-1.5 rounded-full bg-orange-500/60" />
-        <span className="w-1.5 h-1.5 rounded-full bg-orange-400/40" />
+        <span className="w-1.5 h-1.5 bg-orange-500/60" />
+        <span className="w-1.5 h-1.5 bg-orange-400/40" />
       </div>
       <div className="text-[10px] font-mono text-[#b89f75] uppercase tracking-wider mb-2 select-none border-b border-[#523d2b] pb-1 w-full text-center">
         ⚡ SPONSOR LINK
       </div>
 
-      <div className="relative overflow-hidden rounded bg-black/40 min-h-[600px] flex items-center justify-center">
+      <div className="relative bg-black/40 min-h-[600px] flex items-center justify-center rounded-none">
         <ins
           className="kakao_ad_area"
           style={{ display: "none" }}
