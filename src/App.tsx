@@ -26,11 +26,18 @@ import {
   ShieldCheck
 } from "lucide-react";
 import { EditorTheme, HistoryState } from "./types";
-import { DEFAULT_YAML, PRESETS, DESCRIPTIONS } from "./constants";
+import { DEFAULT_YAML, PRESETS } from "./constants";
+import { TRANSLATIONS } from "./translations";
 import PipeAnimation from "./components/PipeAnimation";
 import KakaoAd from "./components/KakaoAd";
 
 export default function App() {
+  // Lang state for i18n
+  const [lang, setLang] = useState<"ko" | "en">("ko");
+  const t = TRANSLATIONS[lang];
+  const DESCRIPTIONS = TRANSLATIONS[lang].descriptions;
+  const curDescriptions = TRANSLATIONS[lang].descriptions;
+
   // Theme & App State
   const [theme, setTheme] = useState<EditorTheme>("dark");
   const [activeTab, setActiveTab] = useState<"editor" | "info">("editor");
@@ -270,7 +277,7 @@ export default function App() {
         return null;
       }
 
-      const hasDescription = !!DESCRIPTIONS[key];
+      const hasDescription = !!curDescriptions[key];
 
       // Nested Object
       if (value !== null && typeof value === "object" && !Array.isArray(value)) {
@@ -325,7 +332,7 @@ export default function App() {
             key={pathStr}
             onMouseEnter={() => {
               setHoveredKey(key);
-              setHoveredDesc(DESCRIPTIONS[key] || "제작식 또는 아이템 조합 목록 배열값입니다.");
+              setHoveredDesc(curDescriptions[key] || (lang === "ko" ? "제작식 또는 아이템 조합 목록 배열값입니다." : "Recipe or item assembly material sequence."));
             }}
             className={`item flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 border transition-all duration-200 rounded-lg ${
               isChanged 
@@ -344,7 +351,7 @@ export default function App() {
                 </span>
                 {hasDescription && (
                   <button 
-                    title={DESCRIPTIONS[key]}
+                    title={curDescriptions[key]}
                     className="text-[#c28a3d] hover:text-[#ffb347] transition-colors p-0.5"
                   >
                     <Info className="w-3.5 h-3.5" />
@@ -352,7 +359,7 @@ export default function App() {
                 )}
               </div>
               <p className="text-xs text-[#b89f75] mb-2 font-sans line-clamp-1">
-                {DESCRIPTIONS[key] || "쉼표로 구분하여 여러 리스트 아이템을 편집할 수 있습니다."}
+                {curDescriptions[key] || (lang === "ko" ? "쉼표로 구분하여 여러 리스트 아이템을 편집할 수 있습니다." : "Delimit multiple list items with commas to edit.")}
               </p>
             </div>
 
@@ -379,7 +386,7 @@ export default function App() {
           key={pathStr}
           onMouseEnter={() => {
             setHoveredKey(key);
-            setHoveredDesc(DESCRIPTIONS[key] || "기본 성능 및 특성 제어를 위한 파라미터 값입니다.");
+            setHoveredDesc(curDescriptions[key] || (lang === "ko" ? "기본 성능 및 특성 제어를 위한 파라미터 값입니다." : "Generic configuration variable representing plugin features."));
           }}
           className={`item flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 border transition-all duration-200 rounded-lg ${
             isChanged 
@@ -398,15 +405,15 @@ export default function App() {
               </span>
               {hasDescription && (
                 <button 
-                  title={DESCRIPTIONS[key]}
+                  title={curDescriptions[key]}
                   className="text-[#c28a3d] hover:text-[#ffb347] transition-colors p-0.5"
                 >
                   <Info className="w-3.5 h-3.5" />
                 </button>
               )}
             </div>
-            {DESCRIPTIONS[key] && (
-              <p className="text-[11px] text-[#b89f75] leading-relaxed line-clamp-1">{DESCRIPTIONS[key]}</p>
+            {curDescriptions[key] && (
+              <p className="text-[11px] text-[#b89f75] leading-relaxed line-clamp-1">{curDescriptions[key]}</p>
             )}
           </div>
 
@@ -513,14 +520,14 @@ export default function App() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-pixel text-4xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-[#ffd38d] via-[#c28a3d] to-[#b57e3e] uppercase select-none drop-shadow">
-                  ARMOURY FIXER
+                  {t.title}
                 </span>
                 <span className="bg-[#ffb347] text-[#171310] text-[10px] font-pixel px-1.5 py-0.2 rounded border border-[#ffd38d] font-black uppercase tracking-wider animate-pulse">
                   YAML v1.2
                 </span>
               </div>
               <p className="text-[11px] font-mono text-[#b89f75] uppercase tracking-widest mt-0.5">
-                Industrial Config Forge
+                {t.subtitle}
               </p>
             </div>
           </div>
@@ -531,20 +538,20 @@ export default function App() {
             {/* Preset Selector */}
             <div className="flex items-center gap-2 mr-2">
               <span className="text-[11px] font-mono font-bold text-[#b89f75] uppercase hidden sm:inline">
-                프리셋 :
+                {t.importPreset} :
               </span>
               <select 
                 value={selectedPreset}
                 onChange={(e) => applyPresetByName(e.target.value)}
                 className="bg-[#2a221d] text-[#f0dfb4] border border-[#8d6033] px-2.5 py-1.5 rounded-md font-mono text-xs focus:outline-none focus:ring-1 focus:ring-[#ffb347] cursor-pointer"
               >
-                <option value="">프리셋 선택</option>
-                <option value="SMG">SMG (경기관총)</option>
-                <option value="SR">SR (저격소총)</option>
-                <option value="AR">AR (돌격소총)</option>
-                <option value="HG">HG (권총)</option>
-                <option value="SG">SG (산탄총)</option>
-                <option value="DMR">DMR (지정사수)</option>
+                <option value="">{t.presetPlaceholder}</option>
+                <option value="SMG">{t.propSMG}</option>
+                <option value="SR">{t.propSR}</option>
+                <option value="AR">{t.propAR}</option>
+                <option value="HG">{t.propHG}</option>
+                <option value="SG">{t.propSG}</option>
+                <option value="DMR">{t.propDMR}</option>
               </select>
             </div>
 
@@ -560,7 +567,7 @@ export default function App() {
                   ? "bg-[#2a221d] hover:bg-[#8d6033]/60 text-[#f0dfb4] border-[#8d6033] cursor-pointer active:scale-95" 
                   : "bg-black/30 text-neutral-600 border-neutral-800 cursor-not-allowed"
               }`}
-              title="되돌리기 (Undo)"
+              title={t.undo}
             >
               <RotateCcw className="w-4 h-4" />
             </button>
@@ -573,7 +580,7 @@ export default function App() {
                   ? "bg-[#2a221d] hover:bg-[#8d6033]/60 text-[#f0dfb4] border-[#8d6033] cursor-pointer active:scale-95" 
                   : "bg-black/30 text-neutral-600 border-neutral-800 cursor-not-allowed"
               }`}
-              title="다시실행 (Redo)"
+              title={t.redo}
             >
               <RotateCw className="w-4 h-4" />
             </button>
@@ -582,9 +589,18 @@ export default function App() {
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="p-2 bg-[#2a221d] hover:bg-[#8d6033]/60 text-[#ffd38d] border border-[#8d6033] rounded cursor-pointer active:scale-95"
-              title={theme === "dark" ? "황동 워크숍 (라이트)" : "산업용 엔진룸 (다크)"}
+              title={theme === "dark" ? "Light theme" : "Dark theme"}
             >
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4 text-[#8d6033]" />}
+            </button>
+
+            {/* i18n Language Toggle Button */}
+            <button
+              onClick={() => setLang(lang === "ko" ? "en" : "ko")}
+              className="px-2 py-2 h-8.5 bg-[#2a221d] hover:bg-[#8d6033]/60 text-[#ffb347] border border-[#ffb347]/40 rounded cursor-pointer active:scale-95 font-pixel text-[10px] flex items-center gap-1 font-bold shadow-[0_0_6px_rgba(255,179,71,0.15)]"
+              title={lang === "ko" ? "Change workspace to English" : "설정 엔진을 한국어로 변경"}
+            >
+              🌐 {lang === "ko" ? "🇺🇸 EN" : "🇰🇷 KO"}
             </button>
             
           </div>
@@ -601,7 +617,7 @@ export default function App() {
             }`}
           >
             <Settings className={`w-5 h-5 ${activeTab === "editor" ? "animate-spin-slow text-[#171310]" : "text-[#b89f75]"}`} />
-            ⚙ 에디터 조종실 (CONFIG FORGE)
+            {t.editorTab}
           </button>
 
           <button
@@ -613,7 +629,7 @@ export default function App() {
             }`}
           >
             <HelpCircle className="w-5 h-5 text-current" />
-            📜 설명서 & 고객 정비실 (ABOUT & SUPPORT)
+            {t.infoTab}
           </button>
         </div>
 
@@ -630,7 +646,7 @@ export default function App() {
                 
                 <h3 className="font-pixel text-xl text-[#ffd38d] mb-4 uppercase tracking-wider border-b border-[#523d2b] pb-2 flex items-center gap-2">
                   <FileText className="w-5 h-5 text-[#c28a3d]" />
-                  FILE MANAGER
+                  {t.fileManager}
                 </h3>
 
                 <div className="space-y-4">
@@ -640,9 +656,9 @@ export default function App() {
                     className="group cursor-pointer border-2 border-dashed border-[#8d6033] hover:border-[#ffb347] bg-[#18130f] p-4 rounded-lg text-center transition-all bg-[radial-gradient(#201914_1px,transparent_1px)] [background-size:8px_8px]"
                   >
                     <Upload className="w-7 h-7 mx-auto text-[#b89f75] group-hover:text-[#ffb347] group-hover:scale-110 transition-transform mb-2" />
-                    <span className="text-xs font-mono font-bold text-[#f0dfb4] block">파일 선택</span>
+                    <span className="text-xs font-mono font-bold text-[#f0dfb4] block">{t.chooseFile}</span>
                     <span className="text-[10px] text-[#b89f75] block mt-1 hover:underline">
-                      또는 정비 스테이션에 DND 해도 인식합니다
+                      {t.dragAndDrop}
                     </span>
                     <input
                       type="file"
@@ -650,13 +666,14 @@ export default function App() {
                       onChange={handleFileUpload}
                       accept=".yml,.yaml"
                       className="hidden"
+                      id="file-input-id"
                     />
                   </div>
 
                   {/* File Display Status with Copper Ring indicator */}
                   <div className="bg-[#1b1410] border border-[#523d2b] p-3 rounded-lg">
                     <span className="text-[10px] font-mono text-[#b89f75] uppercase block mb-1">
-                      선택된 파일
+                      {t.selectedFile}
                     </span>
                     <div className="flex items-center gap-2">
                       <div className="w-2.5 h-2.5 bg-green-500 rounded-full border border-green-200 animate-pulse" />
@@ -671,9 +688,10 @@ export default function App() {
                     type="button"
                     onClick={handleSaveFile}
                     className="w-full py-3 bg-gradient-to-b from-[#c28a3d] to-[#9c5d2d] hover:from-[#ffb347] hover:to-[#c28a3d] active:translate-y-0.5 border-3 border-b-6 border-[#5f3818] text-[#171310] font-pixel text-lg tracking-wider rounded-lg transition-all font-black uppercase text-center flex items-center justify-center gap-2 shadow-[0_4px_0_#3f200c] cursor-pointer"
+                    id="save-file-btn"
                   >
                     <Download className="w-5 h-5 text-[#171310]" />
-                    SAVE FILE
+                    {t.saveFile}
                   </button>
                 </div>
               </div>
@@ -682,7 +700,7 @@ export default function App() {
               <div className="panel border-3 border-[#8d6033] bg-[#2a221d] p-4.5 rounded-xl shadow-lg">
                 <h3 className="font-pixel text-xl text-[#ffd38d] mb-4 uppercase tracking-wider border-b border-[#523d2b] pb-2 flex items-center gap-2">
                   <Flame className="w-5 h-5 text-[#ffb347] animate-pulse" />
-                  QUICK PRESETS
+                  {t.quickPresets}
                 </h3>
 
                 <div className="grid grid-cols-2 lg:grid-cols-1 gap-2">
@@ -745,7 +763,7 @@ export default function App() {
                     <input
                       id="searchBox"
                       type="text"
-                      placeholder="설정 검색 (예: recoil, damage)..."
+                      placeholder={t.searchPlaceholder}
                       value={searchText}
                       onChange={(e) => setSearchText(e.target.value)}
                       className="w-full pl-10 pr-4 py-2 bg-[#18130f] text-[#f0dfb4] placeholder-[#b89f75]/60 border-2 border-[#523d2b] focus:border-[#ffb347] rounded-lg focus:outline-none font-mono text-sm shadow-inner"
@@ -756,7 +774,7 @@ export default function App() {
                         onClick={() => setSearchText("")}
                         className="absolute inset-y-0 right-0 pr-3 flex items-center text-xs opacity-50 hover:opacity-100"
                       >
-                        CLEAR
+                        {lang === "ko" ? "초기화" : "CLEAR"}
                       </button>
                     )}
                   </div>
@@ -774,7 +792,7 @@ export default function App() {
                       />
                       <span className="text-xs font-mono font-medium text-[#ffd38d] flex items-center gap-1.5 uppercase">
                         <Eye className="w-3.5 h-3.5" />
-                        변경된 항목만 보기
+                        {t.filterChanged}
                       </span>
                     </label>
 
@@ -784,20 +802,20 @@ export default function App() {
                         onClick={expandAll}
                         type="button"
                         className="p-1 px-2 hover:bg-[#8d6033]/20 hover:text-[#ffb347] rounded text-[11px] font-mono text-[#b89f75] flex items-center gap-1 transition-all cursor-pointer"
-                        title="모두 펼치기"
+                        title={t.expandAll}
                       >
                         <ChevronsDown className="w-3.5 h-3.5" />
-                        일괄 펼치기
+                        {t.bulkExpand}
                       </button>
                       <div className="h-4 w-[1px] bg-[#523d2b]" />
                       <button
                         onClick={collapseAll}
                         type="button"
                         className="p-1 px-2 hover:bg-[#8d6033]/20 hover:text-[#ffb347] rounded text-[11px] font-mono text-[#b89f75] flex items-center gap-1 transition-all cursor-pointer"
-                        title="모두 접기"
+                        title={t.collapseAll}
                       >
                         <ChevronsUp className="w-3.5 h-3.5" />
-                        일괄 접기
+                        {t.bulkCollapse}
                       </button>
                     </div>
 
@@ -845,7 +863,7 @@ export default function App() {
                       </span>
                     </div>
                     <p className="text-sm max-w-md font-sans mb-4 text-[#b89f75]">
-                      적용 중인 설정 구조체가 없거나 삭제되었습니다. 아래 버튼을 눌러 기본 마인크래프트 수정 시안용 예제 파일을 채우십시오.
+                      {t.emptyDesc}
                     </p>
                     <button 
                       type="button"
@@ -856,7 +874,7 @@ export default function App() {
                       }}
                       className="px-5 py-2.5 bg-[#8d6033] hover:bg-[#c28a3d] rounded text-xs font-mono font-bold cursor-pointer"
                     >
-                      기본 예제 파일로 채우기
+                      {t.fillExample}
                     </button>
                   </div>
                 )}
@@ -877,10 +895,10 @@ export default function App() {
                   </div>
                   <div>
                     <h4 className="font-pixel text-lg text-[#ffd38d] uppercase tracking-wider mb-1 flex items-center gap-2">
-                      {hoveredKey ? `${hoveredKey.toUpperCase()} 설명` : "⚙ 실시간 기어 도움판"}
+                      {hoveredKey ? `${hoveredKey.toUpperCase()} ${lang === "ko" ? "설명" : "Description"}` : t.infoBannerHeader}
                     </h4>
                     <p className="text-xs text-[#b89f75] leading-relaxed">
-                      {hoveredDesc ? hoveredDesc : "에디터 내에 마우스를 올리거나 터치하면, 해당 설정이 인게임에서 담당하는 설명 및 추천 기본 스팀 사양이 이곳에 실시간 연동되어 출력됩니다."}
+                      {hoveredDesc ? hoveredDesc : t.infoBannerDesc}
                     </p>
                   </div>
                 </div>
@@ -890,15 +908,15 @@ export default function App() {
               <div className="flex items-center gap-4 text-xs font-mono bg-[#1b1410] border border-[#3a2f26] px-4 py-3 rounded-lg text-[#b89f75]">
                 <span className="font-bold flex items-center gap-1 text-[#ffd38d]">
                   <Flame className="w-4 h-4 text-[#ffb347] animate-pulse" />
-                  디자인 강조 가이드 :
+                  {t.guideHighlight}:
                 </span>
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-[#ffb347] animate-pulse" />
-                  <span className="text-[11px]">수정된 슬라이드 값 및 주황색 불빛 강조 처리됨</span>
+                  <span className="text-[11px]">{t.guideHighlightValue}</span>
                 </div>
                 <div className="h-3 w-[1px] bg-[#3a2f26]" />
                 <div className="text-[11px]">
-                  일반 가독성을 위해 <strong className="text-[#f0dfb4]">Pretendard</strong> 폰트가 핵심 설계로 반영되었습니다.
+                  {t.pretendardGuide}
                 </div>
               </div>
 
@@ -917,29 +935,29 @@ export default function App() {
                 <div className="absolute top-0 right-0 w-24 h-24 bg-[#ffb347]/5 rounded-bl-full pointer-events-none" />
                 <h3 className="font-pixel text-2xl text-[#ffd38d] mb-4 uppercase tracking-wider border-b border-[#523d2b] pb-2.5 flex items-center gap-2">
                   <Wrench className="w-5 h-5 text-[#c28a3d]" />
-                  무슨 사이트인가요? (Site Guide)
+                  {t.whatIsSite}
                 </h3>
                 
                 <div className="space-y-4 font-sans text-sm text-[#b89f75] leading-relaxed">
                   <p>
-                    이곳은 <strong className="text-[#ffd38d]">마인크래프트 서버 개발자 및 운영자</strong>분들이 복잡하고 까다로운 총기/장비 모드(예: <strong className="text-[#f0dfb4]">Quality Armoury</strong> 플러그인 에셋)의 YAML 환경 설정을 직관적이고 다채로운 비주얼 기어 속에서 안전하게 수정하도록 고안된 <strong className="text-[#ffd38d]">커스텀 yaml 에디터</strong>입니다.
+                    {t.whatIsSiteDesc1}
                   </p>
                   <p>
-                    인게임 밸런싱(데미지, 반동 오차, 연사 딜레이, 탄창 용량 등)을 변경할 때 문장 부호 하나라도 실수하면 플러그인이 완전히 깨지게 설계되어 있는 단스크립트 YAML 특성을 보완하여, <strong className="text-white">마우스 클릭과 고장 없는 인풋 조절판</strong>을 통해 100% 무결성 사양의 <code className="bg-black/40 px-1 py-0.5 rounded text-amber-300 text-xs font-mono">weapon.yml</code> 사양을 조립할 수 있습니다.
+                    {t.whatIsSiteDesc2}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
                   <div className="bg-[#18130f] p-4 rounded-lg border border-[#523d2b]">
-                    <span className="font-pixel text-base text-[#ffd38d] block mb-1">⚙️ 정밀 제어 터미널</span>
+                    <span className="font-pixel text-base text-[#ffd38d] block mb-1">⚙️ {t.terminalTitle}</span>
                     <p className="text-xs text-[#b89f75] font-sans">
-                      입력된 모든 데이터 형식을 Boolean, Number, List 타입별로 판별하여 연산 오류를 사전에 철저히 차단합니다.
+                      {t.terminalDesc}
                     </p>
                   </div>
                   <div className="bg-[#18130f] p-4 rounded-lg border border-[#523d2b]">
-                    <span className="font-pixel text-base text-[#ffd38d] block mb-1">🔥 스마트 기어 프리셋</span>
+                    <span className="font-pixel text-base text-[#ffd38d] block mb-1">🔥 {t.presetsTitle}</span>
                     <p className="text-xs text-[#b89f75] font-sans">
-                      SMG, Sniper(SR), Assault(AR) 등 대표적인 전술 카테고리 기어를 단 한 번의 토글 버튼식으로 즉시 로딩해 병합합니다.
+                      {t.presetsDesc}
                     </p>
                   </div>
                 </div>
@@ -949,36 +967,36 @@ export default function App() {
               <div className="panel border-3 border-[#8d6033] bg-[#2a221d] p-6 rounded-xl shadow-lg">
                 <h3 className="font-pixel text-2xl text-[#ffd38d] mb-4 uppercase tracking-wider border-b border-[#523d2b] pb-2.5 flex items-center gap-2">
                   <Check className="w-5 h-5 text-[#6b8c34]" />
-                  안전 장치 가이드 (How to operate)
+                  {t.safeGuideTitle}
                 </h3>
                 
                 <ul className="space-y-3.5 font-sans text-sm text-[#b89f75]">
                   <li className="flex items-start gap-2.5">
                     <span className="bg-[#ffd38d] text-[#171310] font-mono text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-0.5">1</span>
                     <div>
-                      <strong className="text-[#f0dfb4] block">순정 설정 수동 드롭</strong>
-                      <span>보유 중인 마인크래프트 플러그인 폴더의 <code className="bg-[#18130f] p-0.5 rounded text-xs">.yml</code> 에셋 파일을 센서 박스 안으로 <strong className="text-[#ffd38d]">드래그 앤 드롭</strong>하거나 업로드하세요.</span>
+                      <strong className="text-[#f0dfb4] block">{t.step1Title}</strong>
+                      <span>{t.step1Desc}</span>
                     </div>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <span className="bg-[#ffd38d] text-[#171310] font-mono text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-0.5">2</span>
                     <div>
-                      <strong className="text-[#f0dfb4] block">인텔리센스 툴팁</strong>
-                      <span>키워드 입력폼 옆의 파란색 <strong className="text-[#ffd38d]">ⓘ 아이콘</strong>에 마우스를 호버하면 해당 인게임 물리량의 설명이 실시간 주황 도움판에 안전 연동됩니다.</span>
+                      <strong className="text-[#f0dfb4] block">{t.step2Title}</strong>
+                      <span>{t.step2Desc}</span>
                     </div>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <span className="bg-[#ffd38d] text-[#171310] font-mono text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-0.5">3</span>
                     <div>
-                      <strong className="text-[#f0dfb4] block">동적 변경 추적성</strong>
-                      <span>기본값 대비 수정된 필드는 테두리에 <strong className="text-orange-400">주황색 그라데이션 광배</strong>가 작동하여 어떤 데이터 세트를 임의로 조정했는지 한눈에 검토 가능합니다.</span>
+                      <strong className="text-[#f0dfb4] block">{t.step3Title}</strong>
+                      <span>{t.step3Desc}</span>
                     </div>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <span className="bg-[#ffd38d] text-[#171310] font-mono text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-0.5">4</span>
                     <div>
-                      <strong className="text-[#f0dfb4] block">되돌리기(Undo/Redo) 엔진</strong>
-                      <span>실수로 값을 잘못 수정했더라도 상단의 압축 밸브 기어 탭(<RotateCcw className="w-3.5 h-3.5 inline text-amber-400" /> / <RotateCw className="w-3.5 h-3.5 inline text-amber-400" />)를 통해 작업 세션을 무한으로 뒤집을 수 있습니다!</span>
+                      <strong className="text-[#f0dfb4] block">{t.step4Title}</strong>
+                      <span>{t.step4Desc}</span>
                     </div>
                   </li>
                 </ul>
@@ -989,7 +1007,7 @@ export default function App() {
                 <div className="border-b border-[#523d2b] pb-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                   <h3 className="font-pixel text-xl text-[#ffd38d] uppercase tracking-wider flex items-center gap-2">
                     <ShieldCheck className="w-5 h-5 text-orange-400" />
-                    법률 및 운영 정책 (Legal Policy)
+                    {t.legalTitle}
                   </h3>
                   <span className="text-[10px] bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-2 py-0.5 rounded uppercase font-mono tracking-widest font-bold">
                     AdSense Ready
@@ -1002,31 +1020,20 @@ export default function App() {
                     <details className="group">
                       <summary className="flex items-center justify-between p-4 cursor-pointer select-none text-[#ffd38d] hover:text-[#ffb347] font-pixel text-base">
                         <span className="flex items-center gap-2">
-                          🔒 개인정보처리방침 (Privacy Policy)
+                          {t.privacyTitle}
                         </span>
                         <span className="text-xs text-[#b89f75] group-open:rotate-180 transition-transform">▼</span>
                       </summary>
                       <div className="p-4 pt-0 border-t border-[#3a2f26] text-xs text-[#b89f75] space-y-3 font-sans leading-relaxed max-h-[300px] overflow-y-auto custom-scrollbar">
-                        <p className="font-bold text-[#ffd38d]">최종 수정일: 2026년 6월 12일</p>
-                        <p>
-                          본 사이트는 이용자의 개인정보 수집을 최소화하며 안전하게 처리하기 위해 관계 법령을 준수하여 다음과 같은 방침을 구성하여 일괄 운영합니다.
-                        </p>
+                        <p className="font-bold text-[#ffd38d]">{t.privacyDate}</p>
+                        <p>{t.privacyIntro}</p>
                         <hr className="border-[#3a2f26]" />
-                        <h5 className="font-bold text-white">1. 수집하는 개인정보 항목 및 가공 방식</h5>
-                        <p>
-                          - 본 도구는 기본적으로 <strong>서버 전송이 차단된 완전 정적 클라이언트 에디터(Client-side SPA)</strong>입니다. 귀하가 업로드하는 마인크래프트 YAML 설정 정보는 귀하의 로컬 웹 브라우저 캐시 메모리에서만 파싱 가공되며, 어떠한 외부 원격 서버로도 전송 혹은 무단 보관되지 않으므로 안심하고 정밀 개조 정비를 진행하셔도 좋습니다.<br />
-                          - 사이트의 유지 보수와 안정적인 연동 정보 확인을 위해 구글 애드센스(Google AdSense) 등 서드파티 스크립트를 통한 쿠키 수집이 수행될 수 있습니다.
-                        </p>
-                        <h5 className="font-bold text-white">2. 제3자 광고 게재 및 쿠키 수집 안내 (구글 애드센스 요구안 준수)</h5>
-                        <p>
-                          - 본 웹사이트는 구글(Google, Inc.)을 비롯한 제3자 광고 제휴 업체의 광고 송출 프로세서를 활용하여 가동 비용을 충당합니다.<br />
-                          - 구글은 사용자가 본 사이트 또는 타 웹서비스를 방문한 기록을 바탕으로 보다 정밀하고 유용한 맞춤형 광고를 표출하기 위해 <strong>Doubleclick 쿠키 및 광고 파트너 식별자</strong>를 자체 활용합니다.<br />
-                          - 사용자는 언제든지 구글 광고 공식 관리국(<a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" className="text-[#ffb347] underline hover:text-[#ffd38d]">https://adssettings.google.com</a>)을 통해 개인 맞춤형 연동 추적을 거부하고 설정을 차단할 수 있습니다.
-                        </p>
-                        <h5 className="font-bold text-white">3. 개인정보 보호 담당 주소</h5>
-                        <p>
-                          - 정보 처리 및 개정과 관련된 버그성 애로사항이나 기타 보안 문의선은 공식 무전 채널인 <strong>ericdm47@gmail.com</strong>으로 언제든 편히 무전해 주십시오.
-                        </p>
+                        <h5 className="font-bold text-white">{t.privacySec1Title}</h5>
+                        <p>{t.privacySec1Desc}</p>
+                        <h5 className="font-bold text-white">{t.privacySec2Title}</h5>
+                        <p>{t.privacySec2Desc}</p>
+                        <h5 className="font-bold text-white">{t.privacySec3Title}</h5>
+                        <p>{t.privacySec3Desc}</p>
                       </div>
                     </details>
                   </div>
@@ -1036,25 +1043,18 @@ export default function App() {
                     <details className="group">
                       <summary className="flex items-center justify-between p-4 cursor-pointer select-none text-[#ffd38d] hover:text-[#ffb347] font-pixel text-base">
                         <span className="flex items-center gap-2">
-                          ⚖️ 서비스 이용약관 (Terms of Service)
+                          {t.termsTitle}
                         </span>
                         <span className="text-xs text-[#b89f75] group-open:rotate-180 transition-transform">▼</span>
                       </summary>
                       <div className="p-4 pt-0 border-t border-[#3a2f26] text-xs text-[#b89f75] space-y-3 font-sans leading-relaxed max-h-[300px] overflow-y-auto custom-scrollbar">
-                        <p className="font-bold text-[#ffd38d]">시행일: 2026년 6월 12일</p>
-                        <h5 className="font-bold text-white">제1조 (목적)</h5>
-                        <p>
-                          본 규약은 이용자가 'Armoury Fixer 커스텀 YAML 에디터'가 무상 기부하는 클라이언트 사이드 변환 엔진과 프리셋 저장 인프라를 지혜롭게 다룸에 있어 상호 신뢰와 원활한 작동성을 지속 지키기 위한 수칙의 확보를 목적으로 삼습니다.
-                        </p>
-                        <h5 className="font-bold text-white">제2조 (책임의 한계 및 백업 면책)</h5>
-                        <p>
-                          - 본 수작업 조절기는 마인크래프트의 대표적인 장비 구성 사양을 간편 조율하도록 특별 고안된 독립 무료 도구이며, 변환 제작된 최종 산출물 적용 시 발생할 수 있는 마인크래프트 버그, 인게임 서버 튕김, 충돌(Crash) 등의 책임선은 일체 귀하에게 귀속됩니다.<br />
-                          - 소중하게 가공한 <strong>무기 설정 yaml 코드의 실제 적용 이전에는 안전하게 로컬 이중 사본(.bak)을 구성하는 백업 원칙</strong>을 준수할 것을 무상 라이선스 기준 하에 각별히 협조 부탁드립니다.
-                        </p>
-                        <h5 className="font-bold text-white">제3조 (지적 재산 및 오남용 규제)</h5>
-                        <p>
-                          본 무료 소스 코드의 고의적인 악성 변조 및 스크래핑 행위, 웹사이트 트래픽 고부하 인젝트, 또는 광고 차단기 강요 등으로 인한 운영 간섭은 본 라이선스 제공 거부 및 트래픽 제한 사유가 될 수 있습니다.
-                        </p>
+                        <p className="font-bold text-[#ffd38d]">{t.termsDate}</p>
+                        <h5 className="font-bold text-white">{t.termsSec1Title}</h5>
+                        <p>{t.termsSec1Desc}</p>
+                        <h5 className="font-bold text-white">{t.termsSec2Title}</h5>
+                        <p>{t.termsSec2Desc}</p>
+                        <h5 className="font-bold text-white">{t.termsSec3Title}</h5>
+                        <p>{t.termsSec3Desc}</p>
                       </div>
                     </details>
                   </div>
@@ -1070,7 +1070,7 @@ export default function App() {
               <div className="panel border-3 border-[#8d6033] bg-[#2a221d] p-5.5 rounded-xl shadow-lg relative overflow-hidden">
                 <h3 className="font-pixel text-xl text-[#ffd38d] mb-4 uppercase tracking-wider border-b border-[#523d2b] pb-2 flex items-center gap-2">
                   <Flame className="w-5 h-5 text-orange-400 animate-pulse" />
-                  기계 장치 상태 문의 및 제보 (1:1 Inquiry)
+                  {t.inquiryTitle}
                 </h3>
 
                 {inquirySent ? (
@@ -1083,13 +1083,12 @@ export default function App() {
                         <span className="font-mono text-[10px] text-[#b89f75] uppercase tracking-widest block font-bold leading-none">
                           STATIC FORGE NOTICE
                         </span>
-                        <h4 className="font-pixel text-sm text-white mt-1">문의 전송 방법 안내</h4>
+                        <h4 className="font-pixel text-sm text-white mt-1">{t.staticInquiryNoticeTitle}</h4>
                       </div>
                     </div>
 
                     <p className="text-xs text-[#b89f75] leading-relaxed font-sans">
-                      이 편집기는 브라우저 안에서 단독 실행되는 <strong>정적 포지 에뮬레이터(Client-side SPA)</strong>입니다. 
-                      백엔드 전송 서버를 거치지 않고, 고객님의 <strong>인게임 이메일 앱</strong>을 이용해 개발자 메일함으로 보다 안전하게 즉시 발송됩니다!
+                      {t.staticInquiryNoticeDesc}
                     </p>
 
                     {/* Pre-formatted Email Preview text area */}
@@ -1099,16 +1098,16 @@ export default function App() {
                       </div>
                       <div className="space-y-1 select-all break-all whitespace-pre-wrap mt-2">
                         <strong>To:</strong> ericdm47@gmail.com<br />
-                        <strong>Subject:</strong> [Minecraft Config Editor] {inquiryForm.name} 님의 의견 제보<br />
+                        <strong>Subject:</strong> [Minecraft Config Editor] {inquiryForm.name} {lang === "ko" ? "님의 의견 제보" : "'s Report"}<br />
                         <span className="text-[#b89f75]">----------------------------------------</span><br />
-                        [보내는 이름]: {inquiryForm.name}<br />
-                        [회신 이메일]: {inquiryForm.email}<br />
-                        [문의 종류]: {
-                          inquiryForm.type === "bug" ? "🐛 버그 및 기술 사양 제보" :
-                          inquiryForm.type === "feature" ? "⚙️ 신형 기어 프리셋 제 제안" :
-                          inquiryForm.type === "collab" ? "💼 커스텀 에디팅 제휴 및 주문" : "☕ 기타 격려 인사"
+                        [{lang === "ko" ? "보내는 이름" : "Sender Name"}]: {inquiryForm.name}<br />
+                        [{lang === "ko" ? "회신 이메일" : "Reply Email"}]: {inquiryForm.email}<br />
+                        [{lang === "ko" ? "문의 종류" : "Inquiry Type"}]: {
+                          inquiryForm.type === "bug" ? (lang === "ko" ? "🐛 버그 및 기술 사양 제보" : "🐛 Bug report / Technical issue") :
+                          inquiryForm.type === "feature" ? (lang === "ko" ? "⚙️ 신형 기어 프리셋 제안" : "⚙️ New feature / Preset suggestions") :
+                          inquiryForm.type === "collab" ? (lang === "ko" ? "💼 커스텀 에디팅 제휴 및 주문" : "💼 Business / Custom order requests") : (lang === "ko" ? "☕ 기타 격려 인사" : "☕ Other general talks / encouragement")
                         }<br />
-                        [상세 내용]:<br />
+                        [{lang === "ko" ? "상세 내용" : "Message Body"}]:<br />
                         {inquiryForm.content}
                       </div>
                     </div>
@@ -1119,11 +1118,11 @@ export default function App() {
                         type="button"
                         onClick={() => {
                           const typeText = 
-                            inquiryForm.type === "bug" ? "🐛 버그 및 기술 사양 제보" :
-                            inquiryForm.type === "feature" ? "⚙️ 신형 기어 프리셋 제 제안" :
-                            inquiryForm.type === "collab" ? "💼 커스텀 에디팅 제휴 및 주문" : "☕ 기타 격려 인사";
+                            inquiryForm.type === "bug" ? (lang === "ko" ? "🐛 버그 및 기술 사양 제보" : "🐛 Bug report / Technical issue") :
+                            inquiryForm.type === "feature" ? (lang === "ko" ? "⚙️ 신형 기어 프리셋 제안" : "⚙️ New feature / Preset suggestions") :
+                            inquiryForm.type === "collab" ? (lang === "ko" ? "💼 커스텀 에디팅 제휴 및 주문" : "💼 Business / Custom order requests") : (lang === "ko" ? "☕ 기타 격려 인사" : "☕ Other general talks / encouragement");
                           
-                          const textToCopy = `[To]: ericdm47@gmail.com\n[Subject]: [Minecraft Config Editor] ${inquiryForm.name} 님의 의견 제보\n----------------------------------------\n* 보내는 분: ${inquiryForm.name}\n* 연락처 수신 메일: ${inquiryForm.email}\n* 분류: ${typeText}\n* 제보 본문:\n${inquiryForm.content}`;
+                          const textToCopy = `[To]: ericdm47@gmail.com\n[Subject]: [Minecraft Config Editor] ${inquiryForm.name} ${lang === "ko" ? "님의 의견 제보" : "'s Report"}\n----------------------------------------\n* ${lang === "ko" ? "보내는 분" : "Sender"}: ${inquiryForm.name}\n* ${lang === "ko" ? "연락처 수신 메일" : "Reply Email"}: ${inquiryForm.email}\n* ${lang === "ko" ? "분류" : "Category"}: ${typeText}\n* ${lang === "ko" ? "제보 본문" : "Message"}:\n${inquiryForm.content}`;
                           
                           navigator.clipboard.writeText(textToCopy);
                           setCopiedInquiry(true);
@@ -1135,14 +1134,14 @@ export default function App() {
                             : "bg-[#8d6033]/40 hover:bg-[#8d6033] text-[#f0dfb4] border border-[#ffb347]/30"
                         }`}
                       >
-                        {copiedInquiry ? "✓ 복사 완료!" : "📋 내용 복사하기"}
+                        {copiedInquiry ? t.copiedInquiryBtn : t.copyInquiryBtn}
                       </button>
 
                       <a
-                        href={`mailto:ericdm47@gmail.com?subject=${encodeURIComponent(`[Minecraft Config Editor] ${inquiryForm.name} 님의 의견 제보`)}&body=${encodeURIComponent(`[보내는이]: ${inquiryForm.name}\n[회신용이메일]: ${inquiryForm.email}\n[문의 종류]: ${inquiryForm.type}\n\n[제보 상세 내용]:\n${inquiryForm.content}\n\n------------------------\n(본 양식을 복사하여 메일 작성기로 메일을 보내실 수도 있습니다.)`)}`}
+                        href={`mailto:ericdm47@gmail.com?subject=${encodeURIComponent(`[Minecraft Config Editor] ${inquiryForm.name} ${lang === "ko" ? "님의 의견 제보" : "'s Report"}`)}&body=${encodeURIComponent(`[${lang === "ko" ? "보내는이" : "Sender"}]: ${inquiryForm.name}\n[${lang === "ko" ? "회신용이메일" : "Reply Email"}]: ${inquiryForm.email}\n[${lang === "ko" ? "문의 종류" : "Inquiry Type"}]: ${inquiryForm.type}\n\n[${lang === "ko" ? "제보 상세 내용" : "MessageBody"}]:\n${inquiryForm.content}\n\n------------------------\n${lang === "ko" ? "(본 양식을 복사하여 메일 작성기로 메일을 보내실 수도 있습니다.)" : "(You may copy this form content to dispatch via external mail readers.)"}`)}`}
                         className="py-2 text-xs bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-black font-bold rounded flex items-center justify-center gap-1 transition-all cursor-pointer text-center"
                       >
-                        ✉ 메일 쓰기 실행
+                        {t.openMailBtn}
                       </a>
                     </div>
 
@@ -1155,7 +1154,7 @@ export default function App() {
                         }}
                         className="text-[11px] text-amber-500 hover:underline"
                       >
-                        ← 뒤로 돌아가서 폼 다시 쓰기
+                        {t.backToFormBtn}
                       </button>
                     </div>
                   </div>
@@ -1164,12 +1163,12 @@ export default function App() {
                     onSubmit={(e) => {
                       e.preventDefault();
                       if (!inquiryForm.name.trim() || !inquiryForm.content.trim()) {
-                        alert("이름과 문의내용을 모두 성실하게 입력해 주십시오.");
+                        alert(t.inquiryAlert);
                         return;
                       }
                       
                       // Trigger native mailto link
-                      const mailtoUri = `mailto:ericdm47@gmail.com?subject=${encodeURIComponent(`[Minecraft Config Editor] ${inquiryForm.name} 님의 의견 제보`)}&body=${encodeURIComponent(`[보내는이]: ${inquiryForm.name}\n[회신용이메일]: ${inquiryForm.email}\n[문의 종류]: ${inquiryForm.type}\n\n[제보 상세 내용]:\n${inquiryForm.content}`)}`;
+                      const mailtoUri = `mailto:ericdm47@gmail.com?subject=${encodeURIComponent(`[Minecraft Config Editor] ${inquiryForm.name} ${lang === "ko" ? "님의 의견 제보" : "'s Report"}`)}&body=${encodeURIComponent(`[${lang === "ko" ? "보내는이" : "Sender"}]: ${inquiryForm.name}\n[${lang === "ko" ? "회신용이메일" : "Reply Email"}]: ${inquiryForm.email}\n[${lang === "ko" ? "문의 종류" : "Inquiry Type"}]: ${inquiryForm.type}\n\n[${lang === "ko" ? "제보 상세 내용" : "Message Body"}]:\n${inquiryForm.content}`)}`;
                       
                       try {
                         window.location.href = mailtoUri;
@@ -1182,11 +1181,11 @@ export default function App() {
                     className="space-y-4 font-mono text-xs"
                   >
                     <div>
-                      <label className="block text-[#b89f75] uppercase tracking-wider mb-1 font-bold">보내는 기어 마스터 (이름) :</label>
+                      <label className="block text-[#b89f75] uppercase tracking-wider mb-1 font-bold">{t.inquiryNameLabel}</label>
                       <input 
                         type="text"
                         required
-                        placeholder="이름 혹은 서버 아이디"
+                        placeholder={t.inquiryNamePlaceholder}
                         className="w-full bg-[#18130f] border border-[#6d4c2d] rounded-md p-2 text-xs focus:outline-none focus:border-[#c28a3d]"
                         value={inquiryForm.name}
                         onChange={(e) => setInquiryForm({...inquiryForm, name: e.target.value})}
@@ -1194,7 +1193,7 @@ export default function App() {
                     </div>
 
                     <div>
-                      <label className="block text-[#b89f75] uppercase tracking-wider mb-1 font-bold">회신받을 연락 이메일 (Default) :</label>
+                      <label className="block text-[#b89f75] uppercase tracking-wider mb-1 font-bold">{t.inquiryEmailLabel}</label>
                       <input 
                         type="email"
                         required
@@ -1206,25 +1205,25 @@ export default function App() {
                     </div>
 
                     <div>
-                      <label className="block text-[#b89f75] uppercase tracking-wider mb-1 font-bold">전송 분류 (Filter) :</label>
+                      <label className="block text-[#b89f75] uppercase tracking-wider mb-1 font-bold">{t.inquiryTypeLabel}</label>
                       <select
                         className="w-full bg-[#18130f] border border-[#6d4c2d] rounded-md p-2 text-xs focus:outline-none focus:border-[#c28a3d]"
                         value={inquiryForm.type}
                         onChange={(e) => setInquiryForm({...inquiryForm, type: e.target.value})}
                       >
-                        <option value="bug">🐛 인게임 버그 제보 / 사양 분석 요청</option>
-                        <option value="feature">⚙️ 추가 기어 사양 / 프리셋 추가 제안</option>
-                        <option value="collab">💼 비즈니스 기술 제안 또는 커스텀 주문</option>
-                        <option value="other">☕ 기타 일반적인 인사이트 및 격려</option>
+                        <option value="bug">{t.optBug}</option>
+                        <option value="feature">{t.optFeature}</option>
+                        <option value="collab">{t.optCollab}</option>
+                        <option value="other">{t.optOther}</option>
                       </select>
                     </div>
 
                     <div>
-                      <label className="block text-[#b89f75] uppercase tracking-wider mb-1 font-bold">기록 내용 (Report Box) :</label>
+                      <label className="block text-[#b89f75] uppercase tracking-wider mb-1 font-bold">{t.inquiryContentLabel}</label>
                       <textarea
                         required
                         rows={4}
-                        placeholder="이곳에 문의하고 싶으신 의견 또는 발생한 애로 사항을 자유롭게 타이핑해 주십시오..."
+                        placeholder={t.inquiryContentPlaceholder}
                         className="w-full bg-[#18130f] border border-[#6d4c2d] rounded-md p-2 text-xs focus:outline-none focus:border-[#c28a3d] font-sans custom-scrollbar resize-none"
                         value={inquiryForm.content}
                         onChange={(e) => setInquiryForm({...inquiryForm, content: e.target.value})}
@@ -1235,7 +1234,7 @@ export default function App() {
                       type="submit"
                       className="w-full py-2.5 bg-gradient-to-b from-[#c28a3d] to-[#9c5d2d] hover:from-[#ffb347] hover:to-[#c28a3d] text-[#171310] font-pixel text-base font-black tracking-widest uppercase border-2 border-[#5f3818] rounded-md cursor-pointer transition-all"
                     >
-                      📟 전송 프로세서 작동 (Submit)
+                      {t.inquirySubmitBtn}
                     </button>
                   </form>
                 )}
@@ -1245,30 +1244,30 @@ export default function App() {
               <div className="panel border-3 border-[#c28a3d] bg-[#1a1410] p-5 rounded-xl shadow-lg relative overflow-hidden">
                 <h3 className="font-pixel text-xl text-[#ffb347] mb-3 uppercase tracking-wider border-b border-[#523d2b] pb-2 flex items-center gap-2">
                   <Wrench className="w-4.5 h-4.5" />
-                  개발자 무전 채널 (Forge Masters)
+                  {t.devChannelTitle}
                 </h3>
                 
                 <p className="text-xs text-[#b89f75] font-sans leading-relaxed mb-4">
-                  마인크래프트 개발을 사랑하는 Forge Master의 오피셜 연락선 링크입니다. 기능 개선 제안이나 오류 발생 피드백은 언제든지 대환영입니다.
+                  {t.devChannelDesc}
                 </p>
 
                 <div className="space-y-3 font-mono text-xs">
                   <div className="bg-[#18130f] p-2.5 rounded border border-[#523d2b] flex items-center justify-between">
                     <div>
-                      <span className="text-[10px] text-[#b89f75] block uppercase">Official Email</span>
+                      <span className="text-[10px] text-[#b89f75] block uppercase">{t.devEmailLabel}</span>
                       <span className="text-sm text-[#f0dfb4] select-all font-bold">ericdm47@gmail.com</span>
                     </div>
                     <a 
                       href="mailto:ericdm47@gmail.com"
                       className="p-1 px-2.5 bg-[#8d6033]/30 hover:bg-[#8d6033] border border-[#8d6033] rounded hover:text-[#ffd38d] transition-all"
                     >
-                      편지 쓰기
+                      {t.devEmailBtn}
                     </a>
                   </div>
 
                   <div className="bg-[#18130f] p-2.5 rounded border border-[#523d2b] flex items-center justify-between">
                     <div>
-                      <span className="text-[10px] text-[#b89f75] block uppercase">GitHub Repository</span>
+                      <span className="text-[10px] text-[#b89f75] block uppercase">{t.devGithubLabel}</span>
                       <span className="text-[10px] text-orange-400 truncate w-32 select-all inline-block">yaml-editor...</span>
                     </div>
                     <a 
@@ -1277,7 +1276,7 @@ export default function App() {
                       rel="noopener noreferrer"
                       className="p-1 px-2.5 bg-[#8d6033]/30 hover:bg-[#8d6033] border border-[#8d6033] rounded hover:text-[#ffd38d] flex items-center gap-1 transition-all"
                     >
-                      소스 방문 🔗
+                      {t.devGithubBtn} 🔗
                     </a>
                   </div>
                 </div>
