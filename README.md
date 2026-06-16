@@ -6,3 +6,4 @@
 
 qualiry armoury 플러그인 용으로 만들어졌지만 이론 상 다른 플러그인의 config도 사용할 수 있습니다
 
+https://minecraft-plugin-config-editor.ericdongmin.workers.dev/
